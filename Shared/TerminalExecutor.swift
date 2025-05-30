@@ -1,4 +1,5 @@
 import Foundation
+import AppKit
 
 class TerminalExecutor {
     static let shared = TerminalExecutor()

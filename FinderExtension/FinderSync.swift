@@ -69,19 +69,70 @@ class FinderSync: FIFinderSync {
     }
     
     @IBAction func showAIPrompt(_ sender: AnyObject?) {
-        guard let selectedItems = FIFinderSyncController.default().selectedItemURLs(),
-              let firstItem = selectedItems.first else {
-            showAlert(title: "שגיאה", message: "אנא בחר קובץ תחילה")
-            return
+        NSLog("DEBUG: showAIPrompt called - START")
+        
+        DispatchQueue.main.async {
+            self.findSelectedFileWithRetry(attempt: 1, maxAttempts: 3) { fileURL in
+                if let fileURL = fileURL {
+                    NSLog("DEBUG: Successfully found file: \(fileURL.path)")
+                    
+                    // בדיקה אם API Key מוגדר
+                    guard UserDefaults.standard.string(forKey: "ClaudeAPIKey") != nil else {
+                        self.showAlert(title: "הגדרה נדרשת", message: "אנא הגדר API Key באפליקציה הראשית תחילה")
+                        return
+                    }
+                    
+                    self.showPromptDialog(for: fileURL)
+                } else {
+                    NSLog("DEBUG: No file found after retry attempts")
+                    self.showAlert(title: "טיפ לשימוש", message: "כדי להשתמש ב-AI Assistant:\n\n1. בחר קובץ ספציפי (לא תיקייה)\n2. וודא שהקובץ מודגש בכחול\n3. לחץ קליק ימני ובחר 'AI Assistant'\n\nאם זה לא עובד - נסה לבחור קובץ אחר או לחכות שנייה לפני הקליק")
+                }
+                
+                NSLog("DEBUG: showAIPrompt called - END")
+            }
+        }
+    }
+    
+    private func findSelectedFileWithRetry(attempt: Int, maxAttempts: Int, completion: @escaping (URL?) -> Void) {
+        NSLog("DEBUG: findSelectedFileWithRetry attempt \(attempt) of \(maxAttempts)")
+        
+        let selectedItems = FIFinderSyncController.default().selectedItemURLs()
+        let targetedURL = FIFinderSyncController.default().targetedURL()
+        
+        NSLog("DEBUG: selectedItems = \(String(describing: selectedItems))")
+        NSLog("DEBUG: targetedURL = \(String(describing: targetedURL))")
+        
+        var fileURL: URL?
+        
+        // נסה קודם selectedItems
+        if let selectedItems = selectedItems, !selectedItems.isEmpty {
+            fileURL = selectedItems.first
+            NSLog("DEBUG: Using selectedItems - found \(selectedItems.count) items")
+        }
+        // אם אין selectedItems, נסה targetedURL (רק אם זה קובץ ולא תיקייה)
+        else if let targetedURL = targetedURL {
+            var isDirectory: ObjCBool = false
+            if FileManager.default.fileExists(atPath: targetedURL.path, isDirectory: &isDirectory) && !isDirectory.boolValue {
+                fileURL = targetedURL
+                NSLog("DEBUG: Using targetedURL (file)")
+            } else {
+                NSLog("DEBUG: targetedURL is directory or doesn't exist")
+            }
         }
         
-        // בדיקה אם API Key מוגדר
-        guard UserDefaults.standard.string(forKey: "ClaudeAPIKey") != nil else {
-            showAlert(title: "הגדרה נדרשת", message: "אנא הגדר API Key באפליקציה הראשית תחילה")
-            return
+        if let fileURL = fileURL {
+            completion(fileURL)
+        } else if attempt < maxAttempts {
+            // הגדל את זמן ההמתנה בכל ניסיון
+            let waitTime = Double(attempt) * 0.3
+            NSLog("DEBUG: No file found, retrying in \(waitTime) seconds...")
+            DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+                self.findSelectedFileWithRetry(attempt: attempt + 1, maxAttempts: maxAttempts, completion: completion)
+            }
+        } else {
+            NSLog("DEBUG: No file found after \(maxAttempts) attempts")
+            completion(nil)
         }
-        
-        showPromptDialog(for: firstItem)
     }
     
     private func showPromptDialog(for fileURL: URL) {
@@ -104,11 +155,11 @@ class FinderSync: FIFinderSync {
             let prompt = inputTextField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
             
             guard !prompt.isEmpty else {
-                showAlert(title: "שגיאה", message: "אנא הזן בקשה")
+                self.showAlert(title: "שגיאה", message: "אנא הזן בקשה")
                 return
             }
             
-            processAIRequest(prompt: prompt, fileURL: fileURL)
+            self.processAIRequest(prompt: prompt, fileURL: fileURL)
         }
     }
     
@@ -185,11 +236,13 @@ class FinderSync: FIFinderSync {
     }
     
     private func showAlert(title: String, message: String) {
-        let alert = NSAlert()
-        alert.messageText = title
-        alert.informativeText = message
-        alert.alertStyle = .informational
-        alert.addButton(withTitle: "אישור")
-        alert.runModal()
+        DispatchQueue.main.async {
+            let alert = NSAlert()
+            alert.messageText = title
+            alert.informativeText = message
+            alert.alertStyle = .informational
+            alert.addButton(withTitle: "אישור")
+            alert.runModal()
+        }
     }
 } 

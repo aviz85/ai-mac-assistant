@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E4AC51C2DE936C100D01651 /* AIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C3C3C3C3C3C3B /* AIService.swift */; };
+		0E4AC51D2DE936C100D01651 /* TerminalExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C3C3C3C3C3C3D /* TerminalExecutor.swift */; };
+		0E4AC5232DE93DA700D01651 /* FinderExtension.appex in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2B2B2B2B2B2B2B28 /* FinderExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1A1A1A1A1A1A1A1A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A19 /* AppDelegate.swift */; };
 		1A1A1A1A1A1A1A1C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A1B /* ViewController.swift */; };
 		1A1A1A1A1A1A1A1E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A1A1A1A1A1A1A1D /* Assets.xcassets */; };
@@ -17,9 +20,32 @@
 		3C3C3C3C3C3C3C3E /* TerminalExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C3C3C3C3C3C3D /* TerminalExecutor.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		0E4AC5202DE93A6100D01651 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A1A1A1A1A1A1A0E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2B2B2B2B2B2B2B27;
+			remoteInfo = FinderExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0E4AC5222DE93D9200D01651 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				0E4AC5232DE93DA700D01651 /* FinderExtension.appex in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		1A1A1A1A1A1A1A16 /* AIAssistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AIAssistant.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1A1A1A1A1A1A1A19 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1A1A1A1A1A1A1A19 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xcfilelist; };
 		1A1A1A1A1A1A1A1B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		1A1A1A1A1A1A1A1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A1A1A1A1A1A1A20 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -110,10 +136,12 @@
 				1A1A1A1A1A1A1A12 /* Sources */,
 				1A1A1A1A1A1A1A13 /* Frameworks */,
 				1A1A1A1A1A1A1A14 /* Resources */,
+				0E4AC5222DE93D9200D01651 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				0E4AC5212DE93A6100D01651 /* PBXTargetDependency */,
 			);
 			name = AIAssistant;
 			productName = AIAssistant;
@@ -211,12 +239,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B2B2B2B2B2B2B2B /* FinderSync.swift in Sources */,
-				3C3C3C3C3C3C3C3C /* AIService.swift in Sources */,
-				3C3C3C3C3C3C3C3E /* TerminalExecutor.swift in Sources */,
+				0E4AC51C2DE936C100D01651 /* AIService.swift in Sources */,
+				0E4AC51D2DE936C100D01651 /* TerminalExecutor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0E4AC5212DE93A6100D01651 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2B2B2B2B2B2B2B27 /* FinderExtension */;
+			targetProxy = 0E4AC5202DE93A6100D01651 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		1A1A1A1A1A1A1A1F /* Main.storyboard */ = {
@@ -487,4 +523,4 @@
 /* End XCConfigurationList section */
 	};
 	rootObject = 1A1A1A1A1A1A1A0E /* Project object */;
-} 
+}
